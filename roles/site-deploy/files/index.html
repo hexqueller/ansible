@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dmitry.Kreet</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			background-color: #38444c;
+			margin: 0;
+			padding: 0;
+		}
+		.container {
+			position: relative;
+			width: 100%;
+			height: 100vh;
+			overflow: hidden;
+		}
+		.blog {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 33.33%; /* 1/3 of the screen width */
+			background-color: #fff;
+			padding: 20px;
+			border: 1px solid #ddd;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+			z-index: 1; /* add z-index to ensure blog is on top of animation */
+            border-radius: 20px;
+		}
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .button {
+            background-color: #fff;
+            border: none;
+            color: #38444c;
+            padding: 10px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            background-color: #f7f7f7;
+        }
+
+        .button:not(:last-child) {
+            margin-right: 10px;
+        }
+	</style>
+</head>
+<body>
+	<div class="container">
+		<script src="/code.js"></script>
+		<script>
+			const width = window.innerWidth;
+			const height = window.innerHeight;
+			const numPoints = 100;
+			const points = [];
+
+			for (let i = 0; i < numPoints; i++) {
+				points.push({
+					x: Math.random() * width,
+					y: Math.random() * height,
+					vx: (Math.random() * 2 - 1) / 2, // slow down points by 50%
+					vy: (Math.random() * 2 - 1) / 2
+				});
+			}
+
+			const svg = d3.select('.container')
+				.append('svg')
+				.attr('width', width)
+				.attr('height', height);
+
+			const pointElements = svg.selectAll('circle')
+				.data(points)
+				.enter()
+				.append('circle')
+				.attr('cx', d => d.x)
+				.attr('cy', d => d.y)
+				.attr('r', 2)
+				.style('fill', 'white'); // white points
+
+			let cursorX, cursorY; // store cursor position
+
+			document.addEventListener('mousemove', (e) => {
+				cursorX = e.clientX;
+				cursorY = e.clientY;
+			});
+
+			function updatePoints() {
+				points.forEach(point => {
+					point.x += point.vx;
+					point.y += point.vy;
+
+					if (point.x < 0 || point.x > width) {
+						point.vx = -point.vx;
+					}
+					if (point.y < 0 || point.y > height) {
+						point.vy = -point.vy;
+					}
+				});
+
+				pointElements.attr('cx', d => d.x)
+					.attr('cy', d => d.y);
+			}
+
+			function drawLines() {
+				svg.selectAll('line').remove();
+
+				for (let i = 0; i < numPoints; i++) {
+					for (let j = i + 1; j < numPoints; j++) {
+						const point1 = points[i];
+						const point2 = points[j];
+						const distance = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
+
+						if (distance < 100) { // increase distance to 100 pixels
+							svg.append('line')
+								.attr('x1', point1.x)
+								.attr('y1', point1.y)
+								.attr('x2', point2.x)
+								.attr('y2', point2.y)
+								.style('stroke', 'rgba(255, 255, 255, 0.5)') // white lines
+								.style('stroke-width', 1);
+						}
+					}
+
+					// draw lines to cursor if within 100 pixels
+					if (cursorX && cursorY) {
+						points.forEach(point => {
+							const distance = Math.sqrt(Math.pow(point.x - cursorX, 2) + Math.pow(point.y - cursorY, 2));
+							if (distance < 100) {
+								svg.append('line')
+									.attr('x1', point.x)
+									.attr('y1', point.y)
+									.attr('x2', cursorX)
+									.attr('y2', cursorY)
+									.style('stroke', 'rgba(255, 255, 255, 0.5)') // white lines
+									.style('stroke-width', 1);
+							}
+						});
+					}
+				}
+			}
+
+			function animate() {
+				updatePoints();
+				drawLines();
+				requestAnimationFrame(animate);
+			}
+
+			animate();
+
+			window.addEventListener('resize', () => {
+				width = window.innerWidth;
+				height = window.innerHeight;
+				svg.attr('width', width).attr('height', height);
+				points.forEach(point => {
+					point.x = Math.random() * width;
+					point.y = Math.random() * height;
+				});
+				pointElements.attr('cx', d => d.x)
+					.attr('cy', d => d.y);
+			});
+		</script>
+		<div class="blog">
+			<h1>Добро пожаловать!</h1>
+			<p>Меня зовут Дмитрий Беседин. Я специализируюсь на DevOps, CRE и Python-Dev</p>
+			<p>Мне 22 года, живу и работаю в Белгороде. <b>Есть очень ленивый брат.</b></p>
+            <p>Мой стек:</p>
+            <ul>
+                <li>Ansible - как система конфигурации</li>
+                <li>Vagrant - система при помощи которой разворачивал виртуальные машины</li>
+                <li>Jboss - а позже WildFly - сервер приложения</li>
+                <li>Apache Tomcat - контейнер сервлетов</li>
+                <li>Crypto Pro Java CSP</li>
+                <li>ActiveMQ - брокер сообщений</li>
+                <li>Zabbix и VictoriaMetrics - системы мониторинга</li>
+            </ul>
+			<!-- Add more blog content here -->
+            <div class="buttons">
+                <a href="https://t.me/BesedinDV" target="_blank" class="button">Telegram</a>
+                <a href="#" target="_blank" class="button">Blog</a>
+                <a href="https://github.com/V1RUSnya" target="_blank" class="button">GitHub</a>
+              </div>
+            </div>
+		</div>
+	</div>
+</body>
+</html>

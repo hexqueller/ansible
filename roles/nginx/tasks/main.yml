@@ -1,0 +1,22 @@
+---
+- name: install repo
+  yum:
+    name: epel-release
+    state: present
+
+- name: install nginx
+  yum:
+    name: nginx
+    state: present
+    
+### RELOAD DAEMONS ###
+- name: reload daemons
+  systemd:
+    daemon_reload: yes
+
+### START SERVICES ###
+- name: start nginx
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes

@@ -1,0 +1,11 @@
+[Unit]
+Description=VictoriaMetrics
+After=network.target
+
+[Service]
+User={{victoria_user}}
+Group={{victoria_user}}
+ExecStart={{victoria_path}}/victoria-metrics-prod -config={{victoria_path}}/vmselect.yml
+
+[Install]
+WantedBy=multi-user.target

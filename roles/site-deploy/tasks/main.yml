@@ -1,0 +1,55 @@
+---
+### STOP SERVICES ###
+- name: stop service
+  systemd:
+    name: nginx
+    state: stopped
+  ignore_errors: true
+
+### CREATE DIR'S ###
+- name: create vmstorage dir
+  file:
+    path: "{{site_path}}/{{site_name}}"
+    state: directory
+    mode: '0755'
+
+# - name: copy js file
+#   copy:
+#     src: files/d3.v7.min.js
+#     dest: "{{site_path}}/{{site_name}}/code.js"
+#     owner: root
+#     group: root
+#     mode: '0755'
+
+# - name: copy html files
+#   copy:
+#     src: files/site.html
+#     dest: "{{site_path}}/{{site_name}}/index.html"
+#     owner: root
+#     group: root
+#     mode: '0755'
+
+- name: copy site files to server
+  copy:
+    src: "files/{{ item }}"
+    dest: "{{site_path}}/{{site_name}}/{{ item }}"
+  loop:
+    - code.js
+    - index.html
+
+### PROVIDE CONFIGS ###
+
+- name: provide nginx config
+  template:
+    src: templates/config.conf.j2
+    dest: "{{nginx_config_path}}/{{site_name}}.conf"
+    mode: '0644'
+
+
+### START SERVICES ###
+
+- name: start service
+  systemd:
+    name: nginx
+    state: started
+    enabled: yes

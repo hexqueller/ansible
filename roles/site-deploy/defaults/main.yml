@@ -1,0 +1,9 @@
+---
+## Nginx settings:
+port: 80
+server_name: server-1
+nginx_config_path: /etc/nginx/conf.d
+
+## Site:
+site_name: site
+site_path: "/var/www/"
