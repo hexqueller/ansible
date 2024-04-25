@@ -20,3 +20,9 @@
     name: nginx
     state: started
     enabled: yes
+
+- name: stop firewalld service
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: no
