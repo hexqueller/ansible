@@ -1,0 +1,58 @@
+---
+### STOP SERVICES ###
+- name: stop victoria-metrics
+  systemd:
+    name: victoria-metrics
+    state: stopped
+  ignore_errors: true
+
+### CREATE USER ###
+- name: create group
+  group:
+    name: "{{victoria_user}}"
+    state: present
+
+- name: create user
+  user:
+    name: "{{victoria_user}}"
+    state: present
+    groups: "{{victoria_user}}"
+    append: yes
+    create_home: yes
+    shell: /bin/bash
+
+### CREATE DIR'S ###
+- name: create victoria dir
+  file:
+    path: "{{victoria_path}}/victoria-metrics-data"
+    state: directory
+    owner: "{{victoria_user}}"
+    group: "{{victoria_user}}"
+    mode: '0755'
+
+### INSTALL FILES ###
+- name: copy victoria-metrics
+  copy:
+    src: files/victoria-metrics-prod
+    dest: "{{victoria_path}}"
+    owner: "{{victoria_user}}"
+    group: "{{victoria_user}}"
+    mode: '0755'
+
+- name: provide victoria-metrics service
+  template:
+    src: templates/victoria-metrics.service.j2
+    dest: /etc/systemd/system/victoria-metrics.service
+    mode: '0644'
+
+### RELOAD DAEMONS ###
+- name: reload daemons
+  systemd:
+    daemon_reload: yes
+
+### START ###
+- name: start victoria-metrics service
+  systemd:
+    name: victoria-metrics
+    state: started
+    enabled: yes
