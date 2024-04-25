@@ -11,9 +11,10 @@
     src: "files/{{ item }}"
     dest: "{{site_path}}/{{site_name}}/{{ item }}"
   loop:
-    - d3js.js
     - index.html
     - style.css
+    - d3js.js
+
 
 ### PROVIDE CONFIGS ###
 

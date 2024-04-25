@@ -31,17 +31,19 @@ body {
 }
 
 .button {
-    background-color: #fff;
-    border: none;
-    color: #38444c;
+    background-color: white;
+    border: 2px solid black;
+    color: black;
     padding: 10px 20px;
     text-decoration: none;
     font-size: 16px;
     cursor: pointer;
+    transition-duration: 0.4s;
 }
 
 .button:hover {
-    background-color: #f7f7f7;
+    background-color: black;
+    color: white;
 }
 
 .button:not(:last-child) {
