@@ -2,5 +2,7 @@
 - hosts: http
   become: yes
   roles:
+    - nginx
     - victoria-metrics
-    
+    - grafana
+    - site-deploy

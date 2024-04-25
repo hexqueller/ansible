@@ -1,0 +1,21 @@
+---
+- name: copy rpm file of grafana
+  copy:
+    src: files/grafana-enterprise-10.4.2-1.x86_64.rpm
+    dest: /tmp/grafana-enterprise-10.4.2-1.x86_64.rpm
+
+- name: install grafana
+  yum:
+    name: /tmp/grafana-enterprise-10.4.2-1.x86_64.rpm
+    state: present
+
+### RELOAD DAEMONS ###
+- name: reload daemons
+  systemd:
+    daemon_reload: yes
+    
+- name: start grafana-server
+  systemd:
+    name: grafana-server
+    state: started
+    enabled: yes

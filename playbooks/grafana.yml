@@ -2,5 +2,4 @@
 - hosts: http
   become: yes
   roles:
-    - victoria-metrics
-    
+    - grafana
