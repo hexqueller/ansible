@@ -12,6 +12,12 @@
     state: stopped
   ignore_errors: true
 
+- name: stop node-exporter
+  systemd:
+    name: node-exporter
+    state: stopped
+  ignore_errors: true
+  
 ### CREATE USER ###
 - name: create group
   group:
@@ -45,6 +51,8 @@
     mode: '0755' 
 
 ### INSTALL FILES ###
+
+### Victoria Metrics DB ###
 - name: copy victoria-metrics
   copy:
     src: files/victoria-metrics-prod
@@ -59,6 +67,7 @@
     dest: /etc/systemd/system/victoria-metrics.service
     mode: '0644'
 
+### Victoria Metrics Agent ###
 - name: copy vmagent
   copy:
     src: files/vmagent-prod
@@ -79,6 +88,21 @@
     dest: "{{victoria_path}}/vmagent.yaml"
     mode: '0644'
 
+### Prometheus node_exporter ###
+- name: copy node_exporter
+  copy:
+    src: files/node_exporter
+    dest: "{{victoria_path}}"
+    owner: "{{victoria_user}}"
+    group: "{{victoria_user}}"
+    mode: '0755'
+
+- name: provide node-exporter service
+  template:
+    src: templates/node-exporter.service.j2
+    dest: /etc/systemd/system/node-exporter.service
+    mode: '0644'
+
 ### RELOAD DAEMONS ###
 - name: reload daemons
   systemd:
@@ -94,5 +118,11 @@
 - name: start vmagent service
   systemd:
     name: vmagent
+    state: started
+    enabled: yes
+
+- name: start node-exporter service
+  systemd:
+    name: node-exporter
     state: started
     enabled: yes
