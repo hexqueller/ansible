@@ -8,7 +8,7 @@ Group={{victoria_user}}
 ExecStart={{victoria_path}}/victoria-metrics-prod \
         -storageDataPath={{victoria_path}}/victoria-metrics-data/ \
         -httpListenAddr=0.0.0.0:8428 \
-        -retentionPeriod=1 # 1 Month
+        -retentionPeriod=1
 
 [Install]
 WantedBy=multi-user.target
