@@ -5,7 +5,10 @@ After=network.target
 [Service]
 User={{victoria_user}}
 Group={{victoria_user}}
-ExecStart={{victoria_path}}/victoria-metrics-prod -storageDataPath={{victoria_path}}/victoria-metrics-data
+ExecStart={{victoria_path}}/victoria-metrics-prod \
+        -storageDataPath={{victoria_path}}/victoria-metrics-data/ \
+        -httpListenAddr=0.0.0.0:8428 \
+        -retentionPeriod=1 # 1 Month
 
 [Install]
 WantedBy=multi-user.target

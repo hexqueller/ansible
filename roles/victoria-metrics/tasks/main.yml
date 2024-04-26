@@ -6,6 +6,12 @@
     state: stopped
   ignore_errors: true
 
+- name: stop vmagent
+  systemd:
+    name: vmagent
+    state: stopped
+  ignore_errors: true
+
 ### CREATE USER ###
 - name: create group
   group:
@@ -30,6 +36,14 @@
     group: "{{victoria_user}}"
     mode: '0755'
 
+- name: create vmagent dir
+  file:
+    path: "{{victoria_path}}/vmagent-remotewrite-data"
+    state: directory
+    owner: "{{victoria_user}}"
+    group: "{{victoria_user}}"
+    mode: '0755' 
+
 ### INSTALL FILES ###
 - name: copy victoria-metrics
   copy:
@@ -45,6 +59,26 @@
     dest: /etc/systemd/system/victoria-metrics.service
     mode: '0644'
 
+- name: copy vmagent
+  copy:
+    src: files/vmagent-prod
+    dest: "{{victoria_path}}"
+    owner: "{{victoria_user}}"
+    group: "{{victoria_user}}"
+    mode: '0755'
+
+- name: provide vmagent service
+  template:
+    src: templates/vmagent.service.j2
+    dest: /etc/systemd/system/vmagent.service
+    mode: '0644'
+
+- name: provide vmagent config
+  template:
+    src: templates/vmagent.yaml.j2
+    dest: "{{victoria_path}}/vmagent.yaml"
+    mode: '0644'
+
 ### RELOAD DAEMONS ###
 - name: reload daemons
   systemd:
@@ -54,5 +88,11 @@
 - name: start victoria-metrics service
   systemd:
     name: victoria-metrics
+    state: started
+    enabled: yes
+
+- name: start vmagent service
+  systemd:
+    name: vmagent
     state: started
     enabled: yes

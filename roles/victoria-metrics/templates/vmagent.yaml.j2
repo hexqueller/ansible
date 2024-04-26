@@ -1,0 +1,30 @@
+remoteWrite:
+  url: http://localhost:8428/api/v1/write
+
+remoteWrite:
+  dataDir: {{victoria_path}}/vmagent-remotewrite-data
+
+scrape_configs:
+  - job_name: 'nginx_http_codes'
+    scrape_interval: 10s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['localhost:80']
+    relabel_configs:
+      - source_labels: ['__address__']
+        regex: 'localhost:80'
+        replacement: 'nginx_http_codes'
+        target_label: 'instance'
+
+metric_relabel_configs:
+  - source_labels: ['code']
+    regex: '200|400|500'
+    replacement: '${1}'
+    target_label: 'code'
+
+metrics:
+  - nginx_http_codes_total:
+      type: counter
+      help: Total number of HTTP requests by code
+      labels:
+        - code
