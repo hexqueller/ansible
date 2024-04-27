@@ -1,24 +1,15 @@
 ---
-### STOP SERVICES ###
-- name: stop victoria-metrics
+- name: stop services
   systemd:
-    name: victoria-metrics
+    name: "{{ item }}"
     state: stopped
   ignore_errors: true
-
-- name: stop vmagent
-  systemd:
-    name: vmagent
-    state: stopped
-  ignore_errors: true
-
-- name: stop node-exporter
-  systemd:
-    name: node-exporter
-    state: stopped
-  ignore_errors: true
+  loop:
+  - victoria-metrics
+  - vmagent
+  - node-exporter
+  - grafana-server
   
-### CREATE USER ###
 - name: create group
   group:
     name: "{{victoria_user}}"
@@ -33,24 +24,16 @@
     create_home: yes
     shell: /bin/bash
 
-### CREATE DIR'S ###
-- name: create victoria dir
+- name: create dirs
   file:
-    path: "{{victoria_path}}/victoria-metrics-data"
+    path: "{{victoria_path}}/{{ item }}"
     state: directory
     owner: "{{victoria_user}}"
     group: "{{victoria_user}}"
     mode: '0755'
-
-- name: create vmagent dir
-  file:
-    path: "{{victoria_path}}/vmagent-remotewrite-data"
-    state: directory
-    owner: "{{victoria_user}}"
-    group: "{{victoria_user}}"
-    mode: '0755' 
-
-### INSTALL FILES ###
+  loop:
+  - victoria-metrics-data
+  - vmagent-remotewrite-data
 
 - name: copy files to server
   copy:
@@ -98,32 +81,17 @@
     dest: /etc/grafana/provisioning/dashboards/dashboard-system.yml
     mode: '0644'
 
-### RELOAD DAEMONS ###
 - name: reload daemons
   systemd:
     daemon_reload: yes
 
-### START ###
-- name: start victoria-metrics service
+- name: start services
   systemd:
-    name: victoria-metrics
+    name: "{{ item }}"
     state: started
-    enabled: yes
-
-- name: start vmagent service
-  systemd:
-    name: vmagent
-    state: started
-    enabled: yes
-
-- name: start node-exporter service
-  systemd:
-    name: node-exporter
-    state: started
-    enabled: yes
-
-- name: restart grafana
-  systemd:
-    name: grafana-server
-    state: restarted
-    enabled: yes
+  ignore_errors: true
+  loop:
+  - victoria-metrics
+  - vmagent
+  - node-exporter
+  - grafana-server

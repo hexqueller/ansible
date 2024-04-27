@@ -2,21 +2,6 @@ global:
   scrape_interval: 10s
 
 scrape_configs:
-  - job_name: 'nginx_http_codes'
-    scrape_interval: 10s
-    metrics_path: '/metrics'
-    static_configs:
-      - targets: ['localhost:80']
-    relabel_configs:
-      - source_labels: ['__address__']
-        regex: 'localhost:80'
-        replacement: 'nginx_http_codes'
-        target_label: 'instance'
-      - source_labels: ['code']
-        regex: '200|400|500'
-        replacement: '${1}'
-        target_label: 'code'
-
   - job_name: 'node_stats'
     scrape_interval: 10s
     metrics_path: '/metrics'

@@ -7,7 +7,7 @@ After=network.target
 # Group={{victoria_user}}
 ExecStart={{victoria_path}}/vmagent-prod \
         -promscrape.config={{victoria_path}}/vmagent.yaml \
-        -remoteWrite.url=http://192.168.1.99:8428/api/v1/write
+        -remoteWrite.url={{grafana_server_url}}:8428/api/v1/write
         -promscrape.config.strictParse=false
 
 Restart=always
