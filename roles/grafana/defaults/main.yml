@@ -1,2 +1,3 @@
 ---
-# defaults file for grafana
+grafana_version: 10.4.2-1.x86_64
+# wget https://dl.grafana.com/enterprise/release/grafana-enterprise-{{grafana_version}}.rpm

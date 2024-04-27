@@ -1,8 +1,8 @@
 ---
 - name: copy rpm file of grafana
   copy:
-    src: files/grafana-enterprise-10.4.2-1.x86_64.rpm
-    dest: /tmp/grafana-enterprise-10.4.2-1.x86_64.rpm
+    src: files/grafana-enterprise-{{grafana_version}}.rpm
+    dest: /tmp/grafana-enterprise-{{grafana_version}}.rpm
 
 - name: install grafana
   yum:

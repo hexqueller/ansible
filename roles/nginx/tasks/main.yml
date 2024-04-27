@@ -1,14 +1,12 @@
 ---
-- name: install repo
-  yum:
-    name: epel-release
-    state: present
-
 - name: install nginx
   yum:
-    name: nginx
+    name: "{{ item }}"
     state: present
-    
+  loop:
+  - epel-release
+  - nginx
+
 ### RELOAD DAEMONS ###
 - name: reload daemons
   systemd:
