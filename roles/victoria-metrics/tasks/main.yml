@@ -52,29 +52,21 @@
 
 ### INSTALL FILES ###
 
-### Victoria Metrics DB ###
-- name: copy victoria-metrics
+- name: copy files to server
   copy:
-    src: files/victoria-metrics-prod
-    dest: "{{victoria_path}}"
-    owner: "{{victoria_user}}"
-    group: "{{victoria_user}}"
-    mode: '0755'
+    src: "files/{{ item }}"
+    dest: "{{victoria_path}}/{{ item }}"
+  loop:
+    - victoria-metrics-prod
+    - vmagent-prod
+    - node_exporter
+    - system.json
 
 - name: provide victoria-metrics service
   template:
     src: templates/victoria-metrics.service.j2
     dest: /etc/systemd/system/victoria-metrics.service
     mode: '0644'
-
-### Victoria Metrics Agent ###
-- name: copy vmagent
-  copy:
-    src: files/vmagent-prod
-    dest: "{{victoria_path}}"
-    owner: "{{victoria_user}}"
-    group: "{{victoria_user}}"
-    mode: '0755'
 
 - name: provide vmagent service
   template:
@@ -88,19 +80,22 @@
     dest: "{{victoria_path}}/vmagent.yaml"
     mode: '0644'
 
-### Prometheus node_exporter ###
-- name: copy node_exporter
-  copy:
-    src: files/node_exporter
-    dest: "{{victoria_path}}"
-    owner: "{{victoria_user}}"
-    group: "{{victoria_user}}"
-    mode: '0755'
-
 - name: provide node-exporter service
   template:
     src: templates/node-exporter.service.j2
     dest: /etc/systemd/system/node-exporter.service
+    mode: '0644'
+
+- name: provide datasource
+  template:
+    src: templates/vm.yml.j2
+    dest: /etc/grafana/provisioning/datasources/vm.yml
+    mode: '0644'
+
+- name: provide dashboard
+  template:
+    src: templates/dashboard-system.yml.j2
+    dest: /etc/grafana/provisioning/dashboards/dashboard-system.yml
     mode: '0644'
 
 ### RELOAD DAEMONS ###
@@ -125,4 +120,10 @@
   systemd:
     name: node-exporter
     state: started
+    enabled: yes
+
+- name: restart grafana
+  systemd:
+    name: grafana-server
+    state: restarted
     enabled: yes
