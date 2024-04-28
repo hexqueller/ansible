@@ -25,3 +25,4 @@
     - victoria-cluster
 ```
 ## P.S Роли victoria имеют вложенные роли grafana и grafana-configurate
+https://gitlab.com/xavki/tutoriels-victoriametrics/-/tree/main?ref_type=heads
