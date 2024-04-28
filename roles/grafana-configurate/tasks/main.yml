@@ -1,4 +1,15 @@
 ---
+- set_fact: default_path={{victoria_path}}
+  when: default_path is not defined
+
+- name: copy files to server
+  copy:
+    src: "files/{{ item }}"
+    dest: "{{default_path}}/{{ item }}"
+  loop:
+    - system.json
+    - nginx-exporter.json
+
 - name: provide datasource
   template:
     src: templates/vm.yml.j2

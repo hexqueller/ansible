@@ -6,6 +6,7 @@
   loop:
   - epel-release
   - nginx
+  - glibc
 
 ### RELOAD DAEMONS ###
 - name: reload daemons

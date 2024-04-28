@@ -7,4 +7,14 @@ providers:
   disableDeletion: false
   updateIntervalSeconds: 10 
   options:
-    path: {{victoria_path}}/system.json
+    path: {{default_path}}/system.json
+
+- name: 'nginx-exporter'
+  orgId: 1
+  folder: ''
+  type: file
+  disableDeletion: false
+  updateIntervalSeconds: 10 
+  options:
+    path: {{default_path}}/nginx-exporter.json
+
