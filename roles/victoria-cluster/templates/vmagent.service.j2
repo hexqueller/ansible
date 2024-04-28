@@ -1,0 +1,16 @@
+[Unit]
+Description=vmagent service
+After=network.target
+
+[Service]
+User={{victoria_user}}
+Group={{victoria_user}}
+ExecStart={{victoria_path}}/vmagent-prod -promscrape.config={{victoria_path}}/vmagent.yaml \
+        -remoteWrite.url=http://{{ansible_host}}:8427/api/v1/write \
+        -promscrape.config.strictParse=false
+        
+Restart=always
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

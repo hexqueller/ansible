@@ -1,4 +1,7 @@
 ---
+- set_fact: master=False
+  when: master is not defined
+
 - name: stop services
   systemd:
     name: "{{ item }}"
@@ -46,8 +49,14 @@
     - vmselect-prod
     - vmstorage-prod
     - vmagent-prod
+    - vmauth-prod
+    - node_exporter
 
-### PROVIDE CONFIGS ###
+- name: install grafana on master
+  include_role:
+    name: grafana
+  when: master|bool
+
 - name: provide vminsert.service
   template:
     src: templates/vminsert.service.j2
@@ -66,6 +75,40 @@
     dest: /etc/systemd/system/vmstorage.service
     mode: '0644'
 
+- name: provide vmagent.service
+  template:
+    src: templates/vmagent.service.j2
+    dest: /etc/systemd/system/vmagent.service
+    mode: '0644'
+  when: master|bool
+
+- name: provide vmauth.service
+  template:
+    src: templates/vmauth.service.j2
+    dest: /etc/systemd/system/vmauth.service
+    mode: '0644'
+  when: master|bool
+
+- name: provide node-exporter.service
+  template:
+    src: templates/node-exporter.service.j2
+    dest: /etc/systemd/system/node-exporter.service
+    mode: '0644'
+
+- name: provide vmagent config
+  template:
+    src: templates/vmagent.yaml.j2
+    dest: "{{victoria_path}}/vmagent.yaml"
+    mode: '0644'
+  when: master|bool
+
+- name: provide vmauth config
+  template:
+    src: templates/vmauth.yaml.j2
+    dest: "{{victoria_path}}/vmauth.yaml"
+    mode: '0644'
+  when: master|bool
+
 - name: reload daemons
   systemd:
     daemon_reload: yes
@@ -79,12 +122,15 @@
   - vminsert
   - vmselect
   - vmstorage
+  - node-exporter
 
-# - name: start master services
-#   systemd:
-#     name: "{{ item }}"
-#     state: started
-#   ignore_errors: true
-#   loop:
-#   - vmagent
-#   - grafana-server
+- name: start master services
+  systemd:
+    name: "{{ item }}"
+    state: started
+  ignore_errors: true
+  loop:
+  - vmagent
+  - vmauth
+  - grafana-server
+  when: master|bool

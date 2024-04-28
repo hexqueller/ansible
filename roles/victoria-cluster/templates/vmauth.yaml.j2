@@ -1,0 +1,28 @@
+unauthorized_user:
+  url_map:
+  - src_paths:
+    - /targets
+    - /static.+
+    - /service-discovery
+    - /target-relabel-debug
+    url_prefix:
+    - http://{{ansible_host}}:8429
+  - src_paths:
+    - /api/v1/write
+    url_prefix:
+    - http://192.168.1.10:8480/insert/1/prometheus
+    - http://192.168.1.11:8480/insert/1/prometheus
+  - src_paths:
+    - /api/v1/series
+    - /api/v1/query
+    - /api/v1/query_range
+    - /api/v1/label/[^/]+/values
+    url_prefix:
+    - http://192.168.1.10:8481/select/1/prometheus
+    - http://192.168.1.11:8481/select/1/prometheus
+  - src_paths:
+    - "/vmui.+"
+    - "/prometheus.+"
+    url_prefix:
+    - http://192.168.1.10:8481/select/1
+    - http://192.168.1.11:8481/select/1

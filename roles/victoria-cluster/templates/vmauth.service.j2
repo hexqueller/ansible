@@ -1,0 +1,15 @@
+[Unit]
+Description=vmauth service
+After=network.target
+
+[Service]
+User={{victoria_user}}
+Group={{victoria_user}}
+ExecStart={{victoria_path}}/vmauth-prod -configCheckInterval=5s \
+        -auth.config={{victoria_path}}/vmauth.yaml
+        
+Restart=always
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
