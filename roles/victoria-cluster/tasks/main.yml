@@ -1,108 +1,53 @@
 ---
-
-### STOP SERVICES ###
-- name: stop vminsert service
+- name: stop services
   systemd:
-    name: vminsert
+    name: "{{ item }}"
     state: stopped
   ignore_errors: true
+  loop:
+  - victoria-metrics
+  - vminsert
+  - vmselect
+  - vmstorage
+  - vmagent
+  - grafana-server
 
-- name: stop  vmselect service
-  systemd:
-    name: vmselect
-    state: stopped
-  ignore_errors: true
+- name: create group
+  group:
+    name: "{{victoria_user}}"
+    state: present
 
-- name: stop vmstorage service
-  systemd:
-    name: vmstorage
-    state: stopped
-  ignore_errors: true 
+- name: create user
+  user:
+    name: "{{victoria_user}}"
+    state: present
+    groups: "{{victoria_user}}"
+    append: yes
+    create_home: yes
+    shell: /bin/bash
 
-- name: stop victoria-metrics service
-  systemd:
-    name: victoria-metrics
-    state: stopped
-  ignore_errors: true
-
-### CREATE DIR'S ###
-- name: create vmstorage dir
+- name: create dirs
   file:
-    path: "{{victoria_path}}/vmstorage-data"
+    path: "{{victoria_path}}/{{ item }}"
     state: directory
+    owner: "{{victoria_user}}"
+    group: "{{victoria_user}}"
     mode: '0755'
+  loop:
+  - vmstorage-data
+  - vmagent-remotewrite-data
 
-# - name: create data dir
-#   file:
-#     path: "{{victoria_path}}/data"
-#     state: directory
-#     mode: '0755'
-
-- name: provide priveleges
-  shell: "chown -R {{victoria_user}}:{{victoria_user}} {{victoria_path}}/vmstorage-data"
-
-### INSTALL FILES ###
-# - name: copy victoria-metrics
-#   copy:
-#     src: files/victoria-metrics-prod
-#     dest: "{{victoria_path}}"
-#     owner: root
-#     group: root
-#     mode: '0755'
-
-- name: copy vminsert-prod
+- name: copy files to server
   copy:
-    src: files/vminsert-prod
-    dest: "{{victoria_path}}"
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: copy vmselect-prod
-  copy:
-    src: files/vmselect-prod
-    dest: "{{victoria_path}}"
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: copy vmstorage-prod
-  copy:
-    src: files/vmstorage-prod
-    dest: "{{victoria_path}}"
-    owner: root
-    group: root
-    mode: '0755'
-
-- name: copy vmagent-prod
-  copy:
-    src: files/vmagent-prod
-    dest: "{{victoria_path}}"
-    owner: root
-    group: root
-    mode: '0755'
+    src: "files/{{ item }}"
+    dest: "{{victoria_path}}/{{ item }}"
+  loop:
+    - vminsert-prod
+    - vmselect-prod
+    - vmstorage-prod
+    - vmagent-prod
 
 ### PROVIDE CONFIGS ###
-# - name: provide victoria-metrics.service
-#   template:
-#     src: templates/victoria-metrics.service.j2
-#     dest: /etc/systemd/system/victoria-metrics.service
-#     mode: '0644'
-
-# - name: provide master config
-#   template:
-#     src: templates/master-vmselect.yml.j2
-#     dest: "{{victoria_path}}/vmselect.yml"
-#     mode: '0644'
-#   when: master|bool
-
-# - name: provide slave config
-#   template:
-#     src: templates/slave-vm.select.yml.j2
-#     dest: "{{victoria_path}}/vmselect.yml"
-#     mode: '0644'
-#   when: not master|bool
-
 - name: provide vminsert.service
   template:
     src: templates/vminsert.service.j2
@@ -121,33 +66,25 @@
     dest: /etc/systemd/system/vmstorage.service
     mode: '0644'
 
-### RELOAD DAEMONS ###
 - name: reload daemons
   systemd:
     daemon_reload: yes
 
-### START SERVICES ###
-# - name: start victoria-metrics service
+- name: start services
+  systemd:
+    name: "{{ item }}"
+    state: started
+  ignore_errors: true
+  loop:
+  - vminsert
+  - vmselect
+  - vmstorage
+
+# - name: start master services
 #   systemd:
-#     name: victoria-metrics
+#     name: "{{ item }}"
 #     state: started
-#     enabled: yes
-
-- name: start vminsert service
-  systemd:
-    name: vminsert
-    state: started
-    enabled: yes
-
-- name: start vmselect service
-  systemd:
-    name: vmselect
-    state: started
-    enabled: yes
-
-- name: start vmstorage service
-  systemd:
-    name: vmstorage
-    state: started
-    enabled: yes
-    
+#   ignore_errors: true
+#   loop:
+#   - vmagent
+#   - grafana-server

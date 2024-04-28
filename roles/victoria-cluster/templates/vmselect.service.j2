@@ -1,12 +1,13 @@
 [Unit]
-Description=Victoria Metrics vmselect service
+Description=vmselect service
 After=network.target
 
 [Service]
 User={{victoria_user}}
 Group={{victoria_user}}
-WorkingDirectory={{victoria_path}}
-ExecStart={{victoria_path}}/vmselect-prod -storageNode=192.168.1.10,192.168.1.11
+ExecStart={{victoria_path}}/vmselect-prod -storageNode=192.168.1.10:8401,192.168.1.11:8401 \
+        -httpListenAddr={{ansible_host}}:8481
+        
 Restart=always
 LimitNOFILE=65536
 

@@ -1,12 +1,16 @@
 [Unit]
-Description=Victoria Metrics vmstorage service
+Description=vmstorage service
 After=network.target
 
 [Service]
 User={{victoria_user}}
 Group={{victoria_user}}
-WorkingDirectory={{victoria_path}}
-ExecStart={{victoria_path}}/vmstorage-prod
+ExecStart={{victoria_path}}/vmstorage-prod  -storageDataPath={{victoria_path}}/vmstorage-data \
+        -retentionPeriod=4w \
+        -httpListenAddr={{ansible_host}}:8482 \
+        -vminsertAddr={{ansible_host}}:8400 \
+        -vmselectAddr={{ansible_host}}:8401
+        
 Restart=always
 LimitNOFILE=65536
 
