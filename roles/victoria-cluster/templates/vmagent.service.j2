@@ -7,7 +7,8 @@ User={{victoria_user}}
 Group={{victoria_user}}
 ExecStart={{victoria_path}}/vmagent-prod -promscrape.config={{victoria_path}}/vmagent.yaml \
         -remoteWrite.url=http://{{ansible_host}}:8427/api/v1/write \
-        -promscrape.config.strictParse=false
+        -promscrape.config.strictParse=false \
+        -remoteWrite.tmpDataPath={{victoria_path}}/vmagent-remotewrite-data
         
 Restart=always
 LimitNOFILE=65536

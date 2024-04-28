@@ -44,6 +44,7 @@
   copy:
     src: "files/{{ item }}"
     dest: "{{victoria_path}}/{{ item }}"
+    mode: '0755'
   loop:
     - vminsert-prod
     - vmselect-prod

@@ -12,3 +12,5 @@
 
 http://192.168.1.10:8481/select/1/
 http://192.168.1.11:8481/select/1/
+
+http://localhost:8427 - VMAuth для Grafana
