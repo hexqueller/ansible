@@ -1,3 +1,2 @@
 ---
-# victoria_user: victoriametrics
-# victoria_path: /opt/victoria-metrics
+datasource_port: 8427

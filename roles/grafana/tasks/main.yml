@@ -13,9 +13,3 @@
 - name: reload daemons
   systemd:
     daemon_reload: yes
-    
-- name: start grafana-server
-  systemd:
-    name: grafana-server
-    state: started
-    enabled: yes

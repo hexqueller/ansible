@@ -59,6 +59,11 @@
     name: grafana
   when: master|bool
 
+- name: configurate grafana
+  include_role:
+    name: grafana-configurate
+  when: master|bool
+
 - name: provide hosts
   template:
     src: templates/hosts.j2
@@ -112,20 +117,6 @@
     src: templates/vmauth.yaml.j2
     dest: "{{victoria_path}}/vmauth.yaml"
     mode: '0644'
-
-- name: provide datasource
-  template:
-    src: templates/vm.yml.j2
-    dest: /etc/grafana/provisioning/datasources/vm.yml
-    mode: '0644'
-  when: master|bool
-
-- name: provide dashboard
-  template:
-    src: templates/dashboard-system.yml.j2
-    dest: /etc/grafana/provisioning/dashboards/dashboard-system.yml
-    mode: '0644'
-  when: master|bool
 
 - name: reload daemons
   systemd:

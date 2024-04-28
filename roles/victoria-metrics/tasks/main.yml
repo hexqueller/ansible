@@ -45,6 +45,14 @@
     - node_exporter
     - system.json
 
+- name: install grafana
+  include_role:
+    name: grafana
+
+- name: configurate grafana
+  include_role:
+    name: grafana-configurate
+
 - name: provide victoria-metrics service
   template:
     src: templates/victoria-metrics.service.j2
@@ -67,18 +75,6 @@
   template:
     src: templates/node-exporter.service.j2
     dest: /etc/systemd/system/node-exporter.service
-    mode: '0644'
-
-- name: provide datasource
-  template:
-    src: templates/vm.yml.j2
-    dest: /etc/grafana/provisioning/datasources/vm.yml
-    mode: '0644'
-
-- name: provide dashboard
-  template:
-    src: templates/dashboard-system.yml.j2
-    dest: /etc/grafana/provisioning/dashboards/dashboard-system.yml
     mode: '0644'
 
 - name: reload daemons
