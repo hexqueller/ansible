@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User={{victoria_user}}
 Group={{victoria_user}}
-ExecStart={{victoria_path}}/vminsert-prod -storageNode=192.168.1.10:8400,192.168.1.11:8400 \
+ExecStart={{victoria_path}}/vminsert-prod -storageNode=node1:8400,node2:8400 \
         -httpListenAddr={{ansible_host}}:8480
         
 Restart=always

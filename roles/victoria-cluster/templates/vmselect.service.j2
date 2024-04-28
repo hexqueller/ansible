@@ -5,7 +5,7 @@ After=network.target
 [Service]
 User={{victoria_user}}
 Group={{victoria_user}}
-ExecStart={{victoria_path}}/vmselect-prod -storageNode=192.168.1.10:8401,192.168.1.11:8401 \
+ExecStart={{victoria_path}}/vmselect-prod -storageNode=node1:8401,node2:8401 \
         -httpListenAddr={{ansible_host}}:8481
         
 Restart=always

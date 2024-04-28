@@ -52,11 +52,18 @@
     - vmagent-prod
     - vmauth-prod
     - node_exporter
+    - system.json
 
 - name: install grafana on master
   include_role:
     name: grafana
   when: master|bool
+
+- name: provide hosts
+  template:
+    src: templates/hosts.j2
+    dest: /etc/hosts
+    mode: '0644'
 
 - name: provide vminsert.service
   template:
@@ -81,14 +88,12 @@
     src: templates/vmagent.service.j2
     dest: /etc/systemd/system/vmagent.service
     mode: '0644'
-  when: master|bool
 
 - name: provide vmauth.service
   template:
     src: templates/vmauth.service.j2
     dest: /etc/systemd/system/vmauth.service
     mode: '0644'
-  when: master|bool
 
 - name: provide node-exporter.service
   template:
@@ -101,12 +106,24 @@
     src: templates/vmagent.yaml.j2
     dest: "{{victoria_path}}/vmagent.yaml"
     mode: '0644'
-  when: master|bool
 
 - name: provide vmauth config
   template:
     src: templates/vmauth.yaml.j2
     dest: "{{victoria_path}}/vmauth.yaml"
+    mode: '0644'
+
+- name: provide datasource
+  template:
+    src: templates/vm.yml.j2
+    dest: /etc/grafana/provisioning/datasources/vm.yml
+    mode: '0644'
+  when: master|bool
+
+- name: provide dashboard
+  template:
+    src: templates/dashboard-system.yml.j2
+    dest: /etc/grafana/provisioning/dashboards/dashboard-system.yml
     mode: '0644'
   when: master|bool
 
@@ -118,20 +135,16 @@
   systemd:
     name: "{{ item }}"
     state: started
-  ignore_errors: true
   loop:
   - vminsert
   - vmselect
   - vmstorage
-  - node-exporter
-
-- name: start master services
-  systemd:
-    name: "{{ item }}"
-    state: started
-  ignore_errors: true
-  loop:
   - vmagent
   - vmauth
-  - grafana-server
+  - node-exporter
+
+- name: start grafana server
+  systemd:
+    name: grafana-server
+    state: started
   when: master|bool
