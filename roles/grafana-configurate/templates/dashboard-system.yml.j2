@@ -9,12 +9,11 @@ providers:
   options:
     path: {{default_path}}/system.json
 
-- name: 'nginx-exporter'
+- name: 'node_exporter_full'
   orgId: 1
   folder: ''
   type: file
   disableDeletion: false
   updateIntervalSeconds: 10 
   options:
-    path: {{default_path}}/nginx-exporter.json
-
+    path: {{default_path}}/node_exporter_full.json  

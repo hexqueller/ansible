@@ -8,6 +8,7 @@
     dest: "{{default_path}}/{{ item }}"
   loop:
     - system.json
+    - node_exporter_full.json
 
 - name: provide datasource
   template:

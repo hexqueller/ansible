@@ -35,7 +35,7 @@
   - victoria-metrics-data
   - vmagent-remotewrite-data
 
-- name: copy files to server
+- name: copy files to host
   copy:
     src: "files/{{ item }}"
     dest: "{{victoria_path}}/{{ item }}"
