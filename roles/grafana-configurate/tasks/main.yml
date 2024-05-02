@@ -8,7 +8,6 @@
     dest: "{{default_path}}/{{ item }}"
   loop:
     - system.json
-    - nginx-exporter.json
 
 - name: provide datasource
   template:
