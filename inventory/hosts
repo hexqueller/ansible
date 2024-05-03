@@ -1,19 +1,14 @@
 [nodes]
-node1 ansible_host=192.168.1.10 master=True
-node2 ansible_host=192.168.1.11
-
-[http]
-server-1 ansible_host=192.168.1.99
-
-
-[nodes:vars]
-grafana_server_url=http://192.168.1.10
+node1 ansible_host=192.168.1.99 master=True ansible_ssh_private_key_file=/home/kreet/ansible/vagrant/.vagrant/machines/grafana/virtualbox/private_key
+node2 ansible_host=192.168.1.98 ansible_ssh_private_key_file=/home/kreet/ansible/vagrant/.vagrant/machines/http/virtualbox/private_key
 
 [local:children]
 nodes
-http
 
 [local:vars]
-ansible_user=kreet
-ansible_become_password=29112001di
+ansible_user=vagrant
+#ansible_port=2222
 grafana_server_url=http://127.0.0.1
+
+
+#/home/kreet/ansible/vagrant/.vagrant/machines/grafana/virtualbox/private_key

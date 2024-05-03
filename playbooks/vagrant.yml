@@ -1,0 +1,11 @@
+---
+- hosts: all
+  become: yes
+  roles:
+    - victoria-metrics
+
+- hosts: node2
+  become: yes
+  roles:
+    - nginx
+    - site-deploy

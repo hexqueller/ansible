@@ -1,4 +1,8 @@
 ---
+
+- set_fact: master=False
+  when: master is not defined
+
 - name: stop services
   systemd:
     name: "{{ item }}"
@@ -44,21 +48,29 @@
     - victoria-metrics-prod
     - vmagent-prod
     - node_exporter
-    - nginx-vtx-exporter
 
 - name: install grafana
   include_role:
     name: grafana
+  when: master|bool
 
 - name: configurate grafana
   include_role:
     name: grafana-configurate
+  when: master|bool
+
+- name: provide hosts
+  template:
+    src: templates/hosts.j2
+    dest: /etc/hosts
+    mode: '0644'
 
 - name: provide victoria-metrics service
   template:
     src: templates/victoria-metrics.service.j2
     dest: /etc/systemd/system/victoria-metrics.service
     mode: '0644'
+  when: master|bool
 
 - name: provide vmagent service
   template:
@@ -91,5 +103,4 @@
   - victoria-metrics
   - vmagent
   - node-exporter
-  - nginx-exporter
   - grafana-server

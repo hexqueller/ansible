@@ -1,12 +1,18 @@
 ---
-- name: install nginx
+- name: install dependencies
   yum:
     name: "{{ item }}"
     state: present
   loop:
   - epel-release
-  - nginx
   - glibc
+
+- name: install nginx # Поскольку нужен epel-repo - нужно обновить его ссылки, поэтому дважды yum
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+  - nginx
 
 ### RELOAD DAEMONS ###
 - name: reload daemons

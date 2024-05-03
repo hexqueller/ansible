@@ -3,6 +3,7 @@ Vagrant.configure("2") do |config|
     # Определяем виртуальную машину
     config.vm.define "grafana" do |grafana|
       # Использовать CentOS7 в качестве базового образа
+      config.vm.provider "virtualbox"
       grafana.vm.box = "centos/7"
       config.vm.box_url = "CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box" # https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box
       # Назначить имя хоста
@@ -14,6 +15,7 @@ Vagrant.configure("2") do |config|
     # Определяем виртуальную машину
     config.vm.define "http" do |http|
       # Использовать CentOS7 в качестве базового образа
+      config.vm.provider "virtualbox"
       http.vm.box = "centos/7"
       config.vm.box_url = "CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box"
       # Назначить имя хоста

@@ -1,5 +1,5 @@
 ---
-- hosts: http
+- hosts: node2
   become: yes
   roles:
     - nginx

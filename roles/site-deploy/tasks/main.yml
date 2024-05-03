@@ -15,9 +15,7 @@
     - style.css
     - d3js.js
 
-
 ### PROVIDE CONFIGS ###
-
 - name: provide nginx config
   template:
     src: templates/config.conf.j2
@@ -26,9 +24,8 @@
 
 
 ### START SERVICES ###
-
 - name: start service
   systemd:
     name: nginx
-    state: started
+    state: restarted
     enabled: yes
