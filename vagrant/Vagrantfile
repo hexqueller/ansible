@@ -1,26 +1,33 @@
 # Настройка Vagrant
 Vagrant.configure("2") do |config|
+
+  # Массив с параметрами для виртуальных машин
+  machines = [
+    { name: "grafana", ip: "192.168.1.99" },
+    { name: "http", ip: "192.168.1.98" }
+  ]
+
+  # Указываем плейбук для всех машин
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "../vagrant.yml"
+  end
+
+  # Цикл по массиву машин
+  machines.each do |machine|
     # Определяем виртуальную машину
-    config.vm.define "grafana" do |grafana|
+    config.vm.define machine[:name] do |node|
       # Использовать CentOS7 в качестве базового образа
       config.vm.provider "virtualbox"
-      grafana.vm.box = "centos/7"
-      config.vm.box_url = "CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box" # https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box
-      # Назначить имя хоста
-      grafana.vm.hostname = "grafana"
-      # Назначить IP-адрес
-      grafana.vm.network "public_network", ip: "192.168.1.99", dev: "eno1"
-    end
-  
-    # Определяем виртуальную машину
-    config.vm.define "http" do |http|
-      # Использовать CentOS7 в качестве базового образа
-      config.vm.provider "virtualbox"
-      http.vm.box = "centos/7"
+      node.vm.box = "centos/7"
       config.vm.box_url = "CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box"
       # Назначить имя хоста
-      http.vm.hostname = "http"
+      node.vm.hostname = machine[:name]
       # Назначить IP-адрес
-      http.vm.network "public_network", ip: "192.168.1.98", dev: "eno1"
+      node.vm.network "public_network", ip: machine[:ip], dev: "eno1"
     end
   end
+end
+
+
+
+# https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box

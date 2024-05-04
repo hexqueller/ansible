@@ -1,0 +1,21 @@
+---
+- hosts: grafana
+  become: yes
+  vars:
+    master: true
+    grafana_server_url: http://127.0.0.1
+    victoria_user: victoriametrics
+    victoria_path: /opt/victoria-metrics
+  roles:
+    - victoria-metrics
+
+- hosts: http
+  become: yes
+  vars:
+    grafana_server_url: http://127.0.0.1
+    victoria_user: victoriametrics
+    victoria_path: /opt/victoria-metrics
+  roles:
+    - victoria-metrics
+    - nginx
+    - site-deploy
