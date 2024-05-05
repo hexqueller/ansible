@@ -3,8 +3,8 @@ Vagrant.configure("2") do |config|
 
   # Массив с параметрами для виртуальных машин
   machines = [
-    { name: "grafana", ip: "192.168.1.99" },
-    { name: "http", ip: "192.168.1.98" }
+    { name: "grafana", ip: "10.0.0.99" },
+    { name: "http", ip: "10.0.0.98" }
   ]
 
   # Указываем плейбук для всех машин
