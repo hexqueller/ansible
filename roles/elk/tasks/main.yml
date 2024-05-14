@@ -1,0 +1,21 @@
+---
+- name: copy rpm file of elasticsearch # https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13.4-x86_64.rpm
+  copy:
+    src: files/elasticsearch-{{elk_version}}-x86_64.rpm
+    dest: /tmp/elasticsearch-{{elk_version}}-x86_64.rpm
+
+- name: install elasticsearch
+  yum:
+    name: /tmp/elasticsearch-{{elk_version}}-x86_64.rpm
+    state: present
+
+- name: copy config
+  copy:
+    src: files/elasticsearch.yml
+    dest: /etc/elasticsearch/elasticsearch.yml
+
+- name: start elasticsearch
+  systemd:
+    name: elasticsearch
+    state: started
+    enabled: yes

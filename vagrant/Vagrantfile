@@ -1,13 +1,14 @@
 # Настройка Vagrant
 Vagrant.configure("2") do |config|
 
-  # Массив с параметрами для виртуальных машин
+  # Массив с параметрами виртуальных машин
   machines = [
     { name: "grafana", ip: "10.0.0.99" },
-    { name: "http", ip: "10.0.0.98" }
+    { name: "http", ip: "10.0.0.98" },
+    { name: "elk", ip: "10.0.0.97" }
   ]
 
-  # Указываем плейбук для всех машин
+  # Плейбук для всех машин
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "../vagrant.yml"
   end
@@ -16,14 +17,14 @@ Vagrant.configure("2") do |config|
   machines.each do |machine|
     # Определяем виртуальную машину
     config.vm.define machine[:name] do |node|
-      # Использовать CentOS7 в качестве базового образа
+      # Используем CentOS 7 в качестве базового образа
       config.vm.provider "virtualbox"
       node.vm.box = "centos/7"
       config.vm.box_url = "CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box"
-      # Назначить имя хоста
+      # Имя хоста
       node.vm.hostname = machine[:name]
-      # Назначить IP-адрес
-      node.vm.network "public_network", ip: machine[:ip], dev: "eno1"
+      # IP-адрес
+      node.vm.network "public_network", bridge: "eno1", ip: machine[:ip], dev: "eno1"
     end
   end
 end

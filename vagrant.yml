@@ -19,3 +19,13 @@
     - victoria-metrics
     - nginx
     - site-deploy
+
+- hosts: elk
+  become: yes
+  vars:
+    grafana_server_url: http://127.0.0.1
+    victoria_user: victoriametrics
+    victoria_path: /opt/victoria-metrics
+  roles:
+    - victoria-metrics
+    - elk
