@@ -1,21 +1,31 @@
 ---
-- name: copy rpm file of elasticsearch # https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13.4-x86_64.rpm
+- name: copy files to host
   copy:
-    src: files/elasticsearch-{{elk_version}}-x86_64.rpm
-    dest: /tmp/elasticsearch-{{elk_version}}-x86_64.rpm
+    src: "files/{{ item }}"
+    dest: "/tmp/{{ item }}"
+    mode: '0755'
+  loop:
+    - elasticsearch-{{elk_version}}-x86_64.rpm # https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13.4-x86_64.rpm
+    - kibana-{{elk_version}}-x86_64.rpm # https://artifacts.elastic.co/downloads/kibana/kibana-8.13.4-x86_64.rpm
 
-- name: install elasticsearch
+- name: install rpm's
   yum:
-    name: /tmp/elasticsearch-{{elk_version}}-x86_64.rpm
+    name: "/tmp/{{ item }}"
     state: present
+  loop:
+  - elasticsearch-{{elk_version}}-x86_64.rpm
+  - kibana-{{elk_version}}-x86_64.rpm
 
 - name: copy config
   copy:
     src: files/elasticsearch.yml
     dest: /etc/elasticsearch/elasticsearch.yml
 
-- name: start elasticsearch
+- name: start services
   systemd:
-    name: elasticsearch
+    name: "{{ item }}"
     state: started
     enabled: yes
+  loop:
+  - elasticsearch
+  - kibana
