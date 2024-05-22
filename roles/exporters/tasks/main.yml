@@ -1,0 +1,46 @@
+---
+- name: stop services
+  systemd:
+    name: "{{ item }}"
+    state: stopped
+  ignore_errors: true
+  loop:
+  - node-exporter
+
+- name: create dirs
+  file:
+    path: "{{exporter_path}}"
+    state: directory
+    mode: '0755'
+
+- name: copy files to host
+  copy:
+    src: "files/{{ item }}"
+    dest: "{{exporter_path}}/{{ item }}"
+    mode: '0755'
+  loop:
+    - node_exporter
+
+- name: provide hosts
+  template:
+    src: templates/hosts.j2
+    dest: /etc/hosts
+    mode: '0644'
+
+- name: provide node-exporter service
+  template:
+    src: templates/node-exporter.service.j2
+    dest: /etc/systemd/system/node-exporter.service
+    mode: '0644'
+
+- name: reload daemons
+  systemd:
+    daemon_reload: yes
+
+- name: start exporters
+  systemd:
+    name: "{{ item }}"
+    state: started
+  ignore_errors: true
+  loop:
+  - node-exporter
