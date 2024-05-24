@@ -16,10 +16,15 @@
   - elasticsearch-{{elk_version}}-x86_64.rpm
   - kibana-{{elk_version}}-x86_64.rpm
 
-- name: copy config
+- name: copy elasticsearch config
   copy:
     src: files/elasticsearch.yml
     dest: /etc/elasticsearch/elasticsearch.yml
+
+- name: copy kibana config
+  copy:
+    src: files/kibana.yml
+    dest: /etc/kibana/kibana.yml
 
 - name: start services
   systemd:
@@ -27,5 +32,5 @@
     state: started
     enabled: yes
   loop:
-  - elasticsearch
   - kibana
+  - elasticsearch
