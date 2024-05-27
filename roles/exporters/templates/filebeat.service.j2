@@ -1,0 +1,11 @@
+[Unit]
+Description=Node-exporter
+After=network.target
+
+[Service]
+User=root
+Group=root
+ExecStart={{exporter_path}}/filebeat -e -c filebeat.yml
+
+[Install]
+WantedBy=multi-user.target

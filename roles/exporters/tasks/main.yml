@@ -4,34 +4,33 @@
     name: "{{ item }}"
     state: stopped
   ignore_errors: true
-  loop:
-  - node-exporter
+  loop: "{{ exporter_services }}"
 
 - name: create dirs
   file:
-    path: "{{exporter_path}}"
+    path: "{{ exporter_path }}"
     state: directory
     mode: '0755'
 
 - name: copy files to host
   copy:
     src: "files/{{ item }}"
-    dest: "{{exporter_path}}/{{ item }}"
+    dest: "{{ exporter_path }}/{{ item }}"
     mode: '0755'
-  loop:
-    - node_exporter
+  loop: "{{ exporter_files }}"
 
-- name: provide hosts
-  template:
-    src: templates/hosts.j2
-    dest: /etc/hosts
-    mode: '0644'
+- name: extract filebeat
+  unarchive:
+    src: "{{ exporter_path }}/filebeat-8.13.4-linux-x86_64.tar.gz"
+    dest: "{{ exporter_path }}"
+    remote_src: yes
 
-- name: provide node-exporter service
+- name: provide services
   template:
-    src: templates/node-exporter.service.j2
-    dest: /etc/systemd/system/node-exporter.service
+    src: "templates/{{ item }}.service.j2"
+    dest: "/etc/systemd/system/{{ item }}.service"
     mode: '0644'
+  loop: "{{ exporter_services }}"
 
 - name: reload daemons
   systemd:
@@ -42,5 +41,4 @@
     name: "{{ item }}"
     state: started
   ignore_errors: true
-  loop:
-  - node-exporter
+  loop: "{{ exporter_services }}"
