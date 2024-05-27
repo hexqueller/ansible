@@ -26,6 +26,12 @@
     remote_src: yes
     extra_opts: "--strip-components=1"
 
+- name: provide filebeat config
+  copy:
+    src: "files/filebeat.yml"
+    dest: "{{ exporter_path }}/filebeat.yml"
+    mode: '0644'
+
 - name: provide services
   template:
     src: "templates/{{ item }}.service.j2"
