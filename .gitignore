@@ -3,3 +3,4 @@ roles/grafana/files/grafana-enterprise-10.4.2-1.x86_64.rpm
 vagrant/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box
 roles/elk/files/elasticsearch-8.13.4-x86_64.rpm
 roles/elk/files/kibana-8.13.4-x86_64.rpm
+roles/elk/files/logstash-8.13.4-x86_64.rpm

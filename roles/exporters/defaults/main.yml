@@ -1,8 +1,10 @@
 ---
 exporter_path: /u01/exporters
+
 exporter_files:
       - node_exporter
       - filebeat-8.13.4-linux-x86_64.tar.gz
+
 exporter_services:
       - node-exporter
       - filebeat

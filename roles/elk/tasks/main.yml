@@ -4,31 +4,23 @@
     src: "files/{{ item }}"
     dest: "/tmp/{{ item }}"
     mode: '0755'
-  loop:
-    - elasticsearch-{{elk_version}}-x86_64.rpm # https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-8.13.4-x86_64.rpm
-    - kibana-{{elk_version}}-x86_64.rpm # https://artifacts.elastic.co/downloads/kibana/kibana-8.13.4-x86_64.rpm
+  loop: "{{ elk_files }}"
 
 - name: install rpm's
   yum:
     name: "/tmp/{{ item }}"
     state: present
-  loop:
-  - elasticsearch-{{elk_version}}-x86_64.rpm
-  - kibana-{{elk_version}}-x86_64.rpm
+  loop: "{{ elk_files }}"
 
 - name: copy config
-  copy:
-    src: "files/{{ item }}.yml"
+  template:
+    src: "templates/{{ item }}.yml.j2"
     dest: "/etc/{{ item }}/{{ item }}.yml"
-  loop:
-  - elasticsearch
-  - kibana
+  loop: "{{ elk_services }}"
 
 - name: start services
   systemd:
     name: "{{ item }}"
     state: started
     enabled: yes
-  loop:
-  - elasticsearch
-  - kibana
+  loop: "{{ elk_services }}"
