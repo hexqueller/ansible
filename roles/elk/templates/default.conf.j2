@@ -1,0 +1,16 @@
+input {
+  beats {
+    port => 5044
+  }
+}
+
+filter {
+  # Фильтры
+}
+
+output {
+  elasticsearch {
+    hosts => ["http://localhost:9200"]
+    index => "logs-%{+YYYY.MM.dd}"
+  }
+}

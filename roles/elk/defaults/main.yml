@@ -11,3 +11,6 @@ elk_services:
       - elasticsearch
       - logstash
       - kibana
+
+logstash_configs:
+      - default
