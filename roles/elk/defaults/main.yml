@@ -4,12 +4,12 @@ elk_version: 8.13.4
 
 elk_files:
       - elasticsearch-{{elk_version}}-x86_64.rpm
-      - logstash-{{elk_version}}-x86_64.rpm
+      # - logstash-{{elk_version}}-x86_64.rpm
       - kibana-{{elk_version}}-x86_64.rpm
       
 elk_services:
       - elasticsearch
-      - logstash
+      # - logstash
       - kibana
 
 logstash_configs:

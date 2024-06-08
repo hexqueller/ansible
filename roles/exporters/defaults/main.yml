@@ -1,10 +1,14 @@
 ---
 exporter_path: /u01/exporters
+elk_version: 8.13.4
 
 exporter_files:
       - node_exporter
-      - filebeat-8.13.4-linux-x86_64.tar.gz
+      - filebeat-{{elk_version}}-x86_64.rpm
 
 exporter_services:
       - node-exporter
-      - filebeat
+
+startup_filebeat:
+      - filebeat modules enable logstash
+      - filebeat setup"

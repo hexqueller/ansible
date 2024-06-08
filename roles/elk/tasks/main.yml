@@ -18,11 +18,12 @@
     dest: "/etc/{{ item }}/{{ item }}.yml"
   loop: "{{ elk_services }}"
 
-- name: configure logstash
-  template:
-    src: "templates/{{ item }}.conf.j2"
-    dest: "/etc/logstash/conf.d/{{ item }}.conf"
-  loop: "{{ logstash_configs }}"
+# Временно отключен
+# - name: configure logstash
+#   template:
+#     src: "templates/{{ item }}.conf.j2"
+#     dest: "/etc/logstash/conf.d/{{ item }}.conf"
+#   loop: "{{ logstash_configs }}"
 
 - name: start services
   systemd:
