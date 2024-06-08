@@ -9,6 +9,10 @@ exporter_files:
 exporter_services:
       - node-exporter
 
+exporter_services_full:
+      - node-exporter
+      - filebeat
+
 startup_filebeat:
       - filebeat modules enable logstash
-      - filebeat setup"
+      - filebeat setup

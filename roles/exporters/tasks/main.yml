@@ -4,7 +4,7 @@
     name: "{{ item }}"
     state: stopped
   ignore_errors: true
-  loop: "{{ exporter_services }}"
+  loop: "{{ exporter_services_full }}"
 
 - name: create dirs
   file:
@@ -51,4 +51,4 @@
     name: "{{ item }}"
     state: started
   ignore_errors: true
-  loop: "{{ exporter_services }}"
+  loop: "{{ exporter_services_full }}"
