@@ -5,7 +5,8 @@ Vagrant.configure("2") do |config|
   machines = [
     { name: "grafana", ip: "10.0.0.99" },
     { name: "http", ip: "10.0.0.98" },
-    { name: "elk", ip: "10.0.0.97" }
+    { name: "elk", ip: "10.0.0.97" },
+    { name: "jenkins", ip: "10.0.0.96" }
   ]
 
   # Плейбук для всех машин

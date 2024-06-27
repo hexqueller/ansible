@@ -19,6 +19,11 @@
   become: yes
   roles:
     - elk
+
+- hosts: jenkins
+  become: yes
+  roles:
+    - jenkins
   
 - hosts: all
   become: yes

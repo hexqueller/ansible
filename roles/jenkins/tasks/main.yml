@@ -1,0 +1,21 @@
+---
+- name: download jenkins.repo
+  get_url:
+    url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+    dest: /etc/yum.repos.d/jenkins.repo
+
+- name: import jenkins key
+  command: rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+- name: install required packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - fontconfig
+    - java-17-openjdk
+
+- name: install jenkins
+  yum:
+    name: jenkins
+    state: present
