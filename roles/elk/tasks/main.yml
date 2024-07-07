@@ -13,44 +13,29 @@
     disable_gpg_check: yes
   loop: "{{ elk_files }}"
 
-- name: Конфигурация программ
+- name: Конфигурация ElasticSearch
   template:
-    src: "templates/{{ item }}.yml.j2"
-    dest: "/etc/{{ item }}/{{ item }}.yml"
-  loop: "{{ elk_services }}"
+    src: "templates/elasticsearch.yml.j2"
+    dest: "/etc/elasticsearch/elasticsearch.yml"
 
-- name: Запуск программ
+- name: Запуск ElasticSearch
   systemd:
-    name: "{{ item }}"
+    name: "elasticsearch"
     state: started
     enabled: yes
-  loop: "{{ elk_services }}"
-
-- name: Ожидание запуска Elasticsearch
-  wait_for:
-    port: 9200
-    delay: 5
-    timeout: 300
-
-- name: Установка нового пароля для пользователя elastic
-  shell: "echo -e '{{ elastic_password }}' | /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic --stdin"
-
-- name: Сохранение пароля пользователя elastic
-  shell: 'echo "{{ item }}" >> /root/elastic_passwords.txt'
-  with_items:
-    - "{{ passwords_output.stdout }}"
-  when: passwords_output is defined
 
 - name: Генерация Enrollment token для Kibana
   shell: "/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana"
   register: enrollment_token
 
-- name: Регистрация Kibana
-  shell: "/usr/share/kibana/bin/kibana-setup --enrollment-token {{ enrollment_token.stdout }}"
-  environment:
-    ELASTICSEARCH_URL: "http://localhost:9200"
+- name: Конфигурация Kibana
+  template:
+    src: "templates/kibana.yml.j2"
+    dest: "/etc/kibana/kibana.yml"
 
-- name: Перезапуск Kibana после регистрации
-  service:
-    name: kibana
-    state: restarted
+- name: Запуск Kibana
+  systemd:
+    name: "kibana"
+    state: started
+    enabled: yes
+    
