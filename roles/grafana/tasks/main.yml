@@ -8,6 +8,7 @@
   yum:
     name: /tmp/grafana-enterprise-10.4.2-1.x86_64.rpm
     state: present
+    disable_gpg_check: yes
 
 ### RELOAD DAEMONS ###
 - name: reload daemons

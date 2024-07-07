@@ -15,4 +15,3 @@ exporter_services_full:
 
 startup_filebeat:
       - filebeat modules enable logstash
-      - filebeat setup

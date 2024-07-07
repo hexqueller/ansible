@@ -21,6 +21,9 @@
     name: jenkins
     state: present
 
+- name: set initial admin password for Jenkins
+  command: rm -rf /var/lib/jenkins/secrets/initialAdminPassword && vaecho '{{ jenkins_admin_password }}' > /var/lib/jenkins/secrets/initialAdminPassword
+
 - name: start jenkins
   systemd:
     name: jenkins

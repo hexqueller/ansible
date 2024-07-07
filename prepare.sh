@@ -3,8 +3,8 @@
 elk_ver=8.13.4
 grafana_ver=10.4.2-1.x86_64
 
-centos_url="https://cloud.centos.org/centos/7/vagrant/x86_64/images/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box"
-centos_file="vagrant/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box"
+centos_url="https://ftpmirror.your.org/pub/CentOS-Stream-All/9-stream/BaseOS/x86_64/iso/CentOS-Stream-9-latest-x86_64-dvd1.iso"
+centos_file="vagrant/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box"
 
 elk_url="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-${elk_ver}-x86_64.rpm"
 elk_file="roles/elk/files/elasticsearch-${elk_ver}-x86_64.rpm"

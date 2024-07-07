@@ -23,6 +23,7 @@
   yum:
     name: "{{ exporter_path }}/filebeat-{{elk_version}}-x86_64.rpm"
     state: present
+    disable_gpg_check: yes
 
 - name: provide filebeat config
   copy:

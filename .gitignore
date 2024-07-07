@@ -4,3 +4,4 @@ vagrant/CentOS-7-x86_64-Vagrant-2004_01.VirtualBox.box
 roles/elk/files/elasticsearch*
 roles/elk/files/kibana*
 roles/elk/files/logstash*
+vagrant/CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box
