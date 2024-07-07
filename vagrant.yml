@@ -17,10 +17,10 @@
 
 - hosts: elk
   become: yes
-  vars:
-    startup_filebeat:
-        - filebeat modules enable logstash
-        - filebeat setup
+  # vars:
+  #   startup_filebeat:
+  #       - filebeat modules enable logstash
+  #       - filebeat setup
   roles:
     - elk
 

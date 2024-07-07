@@ -1,6 +1,7 @@
 ---
 exporter_path: /u01/exporters
 elk_version: 8.13.4
+elastic_password: "2911"
 
 exporter_files:
       - node_exporter
@@ -15,3 +16,4 @@ exporter_services_full:
 
 startup_filebeat:
       - filebeat modules enable logstash
+      - filebeat setup

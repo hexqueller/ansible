@@ -3,9 +3,10 @@ Vagrant.configure("2") do |config|
 
   # Массив с параметрами виртуальных машин
   machines = [
-    { name: "grafana", ip: "10.0.0.99" },
-    { name: "http", ip: "10.0.0.98" },
-    { name: "elk", ip: "10.0.0.97" },
+    # { name: "grafana", ip: "10.0.0.99" },
+    # { name: "http", ip: "10.0.0.98" },
+    { name: "elk", ip: "10.0.0.97" }
+    # { name: "jenkins", ip: "10.0.0.96" }
   ]
 
   # Плейбук для всех машин
@@ -19,9 +20,8 @@ Vagrant.configure("2") do |config|
     config.vm.define machine[:name] do |node|
       # Используем CentOS 7 в качестве базового образа
       node.vm.provider "virtualbox" do |vb|
-        vb.memory = "4096"
-        vb.cpus = 4
-      end
+        vb.memory = "8196"
+        vb.cpus = 6
       node.vm.box = "centos/9"
       config.vm.box_url = "CentOS-Stream-Vagrant-9-20230704.1.x86_64.vagrant-virtualbox.box"
       # Имя хоста

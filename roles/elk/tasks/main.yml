@@ -1,34 +1,56 @@
 ---
-- name: copy files to host
+- name: Перенос пакетов на хост
   copy:
     src: "files/{{ item }}"
     dest: "/tmp/{{ item }}"
     mode: '0755'
   loop: "{{ elk_files }}"
 
-- name: install rpm's
+- name: Установка rpm's
   yum:
     name: "/tmp/{{ item }}"
     state: present
     disable_gpg_check: yes
   loop: "{{ elk_files }}"
 
-- name: copy config
+- name: Конфигурация программ
   template:
     src: "templates/{{ item }}.yml.j2"
     dest: "/etc/{{ item }}/{{ item }}.yml"
   loop: "{{ elk_services }}"
 
-# Временно отключен
-# - name: configure logstash
-#   template:
-#     src: "templates/{{ item }}.conf.j2"
-#     dest: "/etc/logstash/conf.d/{{ item }}.conf"
-#   loop: "{{ logstash_configs }}"
-
-- name: start services
+- name: Запуск программ
   systemd:
     name: "{{ item }}"
     state: started
     enabled: yes
   loop: "{{ elk_services }}"
+
+- name: Ожидание запуска Elasticsearch
+  wait_for:
+    port: 9200
+    delay: 5
+    timeout: 300
+
+- name: Установка нового пароля для пользователя elastic
+  shell: "echo -e '{{ elastic_password }}' | /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic --stdin"
+
+- name: Сохранение пароля пользователя elastic
+  shell: 'echo "{{ item }}" >> /root/elastic_passwords.txt'
+  with_items:
+    - "{{ passwords_output.stdout }}"
+  when: passwords_output is defined
+
+- name: Генерация Enrollment token для Kibana
+  shell: "/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana"
+  register: enrollment_token
+
+- name: Регистрация Kibana
+  shell: "/usr/share/kibana/bin/kibana-setup --enrollment-token {{ enrollment_token.stdout }}"
+  environment:
+    ELASTICSEARCH_URL: "http://localhost:9200"
+
+- name: Перезапуск Kibana после регистрации
+  service:
+    name: kibana
+    state: restarted
