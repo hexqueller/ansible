@@ -2,7 +2,7 @@
 exporter_path: /u01/exporters
 elk_version: 8.13.4
 
-elastic_password: "changeme"
+# elastic_password: "changeme"
 
 elk_files:
       - elasticsearch-{{elk_version}}-x86_64.rpm

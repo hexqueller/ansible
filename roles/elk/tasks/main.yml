@@ -24,9 +24,21 @@
     state: started
     enabled: yes
 
-- name: Генерация Enrollment token для Kibana
-  shell: "/usr/share/elasticsearch/bin/elasticsearch-create-enrollment-token -s kibana"
-  register: enrollment_token
+- name: Сброс пароля Elasticsearch
+  command: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u elastic -s -b
+  register: raw_elastic_password
+
+- name: Извлечение пароля
+  set_fact:
+    elastic_password: "{{ raw_elastic_password.stdout }}"
+
+- name: Генерация Service token для Kibana
+  shell: "/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana token"
+  register: service_token_output
+
+- name: Извлечение токена
+  set_fact:
+    service_token: "{{ service_token_output.stdout | regex_search('SERVICE_TOKEN elastic/kibana/token = (.+)', '\\1') }}"
 
 - name: Конфигурация Kibana
   template:
