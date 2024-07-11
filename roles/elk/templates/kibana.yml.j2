@@ -1,9 +1,9 @@
 server.port: 5601
 server.host: "0.0.0.0"
 elasticsearch.hosts: ["http://localhost:9200"]
-# elasticsearch.username: "elastic"
-# elasticsearch.password: "{{ elastic_password }}"
-elasticsearch.serviceAccountToken: "{{ service_token }}"
+elasticsearch.username: "{{ service_account_name }}"
+elasticsearch.password: "{{ kibana_account_password }}"
+# elasticsearch.serviceAccountToken: "{{ service_token }}"
 
 # xpack.security.encryptionKey: "your_security_encryption_key_here"
 # xpack.encryptedSavedObjects.encryptionKey: "your_encryption_key_here"

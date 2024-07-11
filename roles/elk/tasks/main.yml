@@ -32,13 +32,31 @@
   set_fact:
     elastic_password: "{{ raw_elastic_password.stdout }}"
 
+- name: Меняем пароль для учетной записи Kibana
+  uri:
+    url: "{{ elasticsearch_url }}/_security/user/{{ service_account_name }}/_password"
+    method: PUT
+    user: "{{ elastic_user }}"
+    password: "{{ elastic_password }}"
+    validate_certs: no
+    body: |
+      {
+        "password": "{{ kibana_account_password }}"
+      }
+    body_format: json
+    status_code: 200
+
 - name: Генерация Service token для Kibana
-  shell: "/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana token"
+  shell: "/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana kibana-token"
   register: service_token_output
+
+- name: Debug token
+  debug:
+    msg: "The service token output: {{ service_token_output }}"
 
 - name: Извлечение токена
   set_fact:
-    service_token: "{{ service_token_output.stdout | regex_search('SERVICE_TOKEN elastic/kibana/token = (.+)', '\\1') }}"
+    service_token: "{{ (service_token_output.stdout | regex_search('SERVICE_TOKEN elastic/kibana/kibana-token = (.+)', '\\1')) | first }}"
 
 - name: Конфигурация Kibana
   template:

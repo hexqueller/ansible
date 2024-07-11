@@ -29,8 +29,8 @@
   roles:
     - jenkins
   
-- hosts: all
-  become: yes
-  roles:
-    - newOS
-    - exporters
+# - hosts: all
+#   become: yes
+#   roles:
+#     - newOS
+#     - exporters

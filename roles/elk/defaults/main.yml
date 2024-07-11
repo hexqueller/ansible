@@ -2,7 +2,10 @@
 exporter_path: /u01/exporters
 elk_version: 8.13.4
 
-# elastic_password: "changeme"
+elastic_user: elastic
+service_account_name: kibana
+kibana_account_password: qwertyQWERTY
+elasticsearch_url: http://localhost:9200
 
 elk_files:
       - elasticsearch-{{elk_version}}-x86_64.rpm
