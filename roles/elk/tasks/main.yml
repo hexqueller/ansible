@@ -46,13 +46,29 @@
     body_format: json
     status_code: 200
 
+- name: Создаем учетную запись Viewer
+  uri:
+    url: "{{ elasticsearch_url }}/_security/user/{{ viewer_account_name }}"
+    method: PUT
+    user: "{{ elastic_user }}"
+    password: "{{ elastic_password }}"
+    validate_certs: no
+    body: |
+      {
+        "password": "{{ viewer_account_password }}",
+        "roles": ["superuser"],
+        "full_name": "Viewer Account",
+        "email": "viewer@example.com",
+        "metadata": {
+          "service": "viewer"
+        }
+      }
+    body_format: json
+    status_code: 200
+
 - name: Генерация Service token для Kibana
   shell: "/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana kibana-token"
   register: service_token_output
-
-- name: Debug token
-  debug:
-    msg: "The service token output: {{ service_token_output }}"
 
 - name: Извлечение токена
   set_fact:

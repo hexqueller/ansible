@@ -7,6 +7,9 @@ service_account_name: kibana
 kibana_account_password: qwertyQWERTY
 elasticsearch_url: http://localhost:9200
 
+viewer_account_name: "viewer"
+viewer_account_password: "{{ viewer_account_name }}"
+
 elk_files:
       - elasticsearch-{{elk_version}}-x86_64.rpm
       # - logstash-{{elk_version}}-x86_64.rpm
