@@ -65,6 +65,12 @@
     src: "templates/kibana.yml.j2"
     dest: "/etc/kibana/kibana.yml"
 
+- name: Конфигурация Logstash
+  template:
+    src: "templates/logstash/{{ item }}.j2"
+    dest: "/etc/logstash/conf.d/{{ item }}"
+  loop: "{{ logstash_configs }}"
+
 - name: Запуск сервисов
   systemd:
     name: "{{ item }}"

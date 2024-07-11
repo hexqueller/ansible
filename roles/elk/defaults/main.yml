@@ -21,4 +21,5 @@ elk_services:
       - kibana
 
 logstash_configs:
-      - default
+      - input.conf
+      - output.conf

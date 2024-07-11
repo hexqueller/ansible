@@ -1,0 +1,8 @@
+output {
+        elasticsearch {
+            hosts    => "https://localhost:9200"
+            index    => "websrv-%{+YYYY.MM}"
+	    user => "elastic"
+	    password => "{{ elastic_password }}"
+        }
+}

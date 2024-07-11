@@ -1,46 +1,8 @@
-###################### Filebeat Configuration Example #########################
-
-# ============================== Filebeat inputs ===============================
-
 filebeat.inputs:
-- type: filestream
-  id: my-filestream-id
+- type: log
   enabled: true
   paths:
     - /var/log/*.log
 
-# ============================== Filebeat modules ==============================
-
-filebeat.config.modules:
-  path: ${path.config}/modules.d/*.yml
-  reload.enabled: false
-
-# ======================= Elasticsearch template setting =======================
-
-setup.template.settings:
-  index.number_of_shards: 1
-
-# =================================== Kibana ===================================
-
-setup.kibana:
-  host: "elk:5601"
-
-# ================================== Outputs ===================================
-
-output.elasticsearch:
-  hosts: ["elk:9200"]
-  username: "{{ viewer_account_name }}"
-  password: "{{ viewer_account_password }}"
-
-# ================================= Processors =================================
-processors:
-  - add_host_metadata:
-      when.not.contains.tags: forwarded
-  - add_cloud_metadata: ~
-  - add_docker_metadata: ~
-  - add_kubernetes_metadata: ~
-
-# ================================== Logging ===================================
-
-# Sets log level. The default log level is info.
-logging.level: info
+output.logstash:
+  hosts: ["localhost:5044"]

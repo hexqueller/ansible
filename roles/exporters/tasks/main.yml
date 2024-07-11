@@ -1,11 +1,4 @@
 ---
-- name: stop services
-  systemd:
-    name: "{{ item }}"
-    state: stopped
-  ignore_errors: true
-  loop: "{{ exporter_services_full }}"
-
 - name: create dirs
   file:
     path: "{{ exporter_path }}"
@@ -41,11 +34,6 @@
 - name: reload daemons
   systemd:
     daemon_reload: yes
-
-- name: setup filebeat
-  command: '{{ item }}'
-  ignore_errors: true
-  loop: "{{ startup_filebeat }}"
 
 - name: start exporters
   systemd:
