@@ -32,19 +32,13 @@
   set_fact:
     elastic_password: "{{ raw_elastic_password.stdout }}"
 
-- name: Меняем пароль для учетной записи Kibana
-  uri:
-    url: "{{ elasticsearch_url }}/_security/user/{{ service_account_name }}/_password"
-    method: PUT
-    user: "{{ elastic_user }}"
-    password: "{{ elastic_password }}"
-    validate_certs: no
-    body: |
-      {
-        "password": "{{ kibana_account_password }}"
-      }
-    body_format: json
-    status_code: 200
+- name: Сброс пароля Kibana
+  command: /usr/share/elasticsearch/bin/elasticsearch-reset-password -u kibana_system -s -b
+  register: raw_kibana_password
+
+- name: Извлечение пароля
+  set_fact:
+    kibana_password: "{{ raw_kibana_password.stdout }}"
 
 - name: Создаем учетную запись Viewer
   uri:
@@ -66,22 +60,15 @@
     body_format: json
     status_code: 200
 
-- name: Генерация Service token для Kibana
-  shell: "/usr/share/elasticsearch/bin/elasticsearch-service-tokens create elastic/kibana kibana-token"
-  register: service_token_output
-
-- name: Извлечение токена
-  set_fact:
-    service_token: "{{ (service_token_output.stdout | regex_search('SERVICE_TOKEN elastic/kibana/kibana-token = (.+)', '\\1')) | first }}"
-
 - name: Конфигурация Kibana
   template:
     src: "templates/kibana.yml.j2"
     dest: "/etc/kibana/kibana.yml"
 
-- name: Запуск Kibana
+- name: Запуск сервисов
   systemd:
-    name: "kibana"
+    name: "{{ item }}"
     state: started
     enabled: yes
+  loop: "{{ elk_services }}"
     
