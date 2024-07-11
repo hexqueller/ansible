@@ -1,7 +1,9 @@
 ---
 exporter_path: /u01/exporters
 elk_version: 8.13.4
-elastic_password: "changeme"
+
+viewer_account_name: "viewer"
+viewer_account_password: "{{ viewer_account_name }}"
 
 exporter_files:
       - node_exporter
