@@ -1,31 +1,31 @@
 ---
 ### CREATE DIR'S ###
-- name: create dir
-  file:
-    path: "{{site_path}}/{{site_name}}"
+- name: Create dir
+  ansible.builtin.file:
+    path: "{{ site_path }}/{{ site_name }}"
     state: directory
-    mode: '0755'
+    mode: "0755"
 
-- name: copy site files to server
-  copy:
-    src: "files/{{ item }}"
-    dest: "{{site_path}}/{{site_name}}/{{ item }}"
+- name: Copy site files to server
+  ansible.builtin.copy:
+    src: files/{{ item }}
+    dest: "{{ site_path }}/{{ site_name }}/{{ item }}"
+    mode: "0744"
   loop:
     - index.html
     - style.css
     - d3js.js
 
 ### PROVIDE CONFIGS ###
-- name: provide nginx config
-  template:
+- name: Provide nginx config
+  ansible.builtin.template:
     src: templates/config.conf.j2
-    dest: "{{nginx_config_path}}/{{site_name}}.conf"
-    mode: '0644'
-
+    dest: "{{ nginx_config_path }}/{{ site_name }}.conf"
+    mode: "0644"
 
 ### START SERVICES ###
-- name: start service
-  systemd:
+- name: Start service
+  ansible.builtin.systemd:
     name: nginx
     state: restarted
-    enabled: yes
+    enabled: true
