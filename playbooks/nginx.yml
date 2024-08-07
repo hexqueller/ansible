@@ -1,5 +1,6 @@
 ---
-- hosts: node2
-  become: yes
+- name: Install nginx
+  hosts: node2
+  become: true
   roles:
     - nginx

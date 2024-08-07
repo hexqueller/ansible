@@ -1,18 +1,17 @@
 ---
-
-- name: install nginx
-  yum:
+- name: Install nginx
+  ansible.builtin.yum:
     name: nginx
     state: present
 
-- name: start nginx
-  systemd:
+- name: Start nginx
+  ansible.builtin.systemd:
     name: nginx
     state: started
-    enabled: yes
+    enabled: false
 
-- name: stop firewalld service
-  systemd:
+- name: Stop firewalld service
+  ansible.builtin.systemd:
     name: firewalld
     state: stopped
-    enabled: no
+    enabled: false
