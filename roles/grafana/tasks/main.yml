@@ -1,16 +1,17 @@
 ---
-- name: copy rpm file of grafana
-  copy:
-    src: files/grafana-enterprise-{{grafana_version}}.rpm
-    dest: /tmp/grafana-enterprise-{{grafana_version}}.rpm
+- name: Copy rpm file of grafana
+  ansible.builtin.copy:
+    src: files/grafana-enterprise-{{ grafana_version }}.rpm
+    dest: /tmp/grafana-enterprise-{{ grafana_version }}.rpm
+    mode: '0644'
 
-- name: install grafana
-  yum:
+- name: Install grafana
+  ansible.builtin.yum:
     name: /tmp/grafana-enterprise-10.4.2-1.x86_64.rpm
     state: present
-    disable_gpg_check: yes
+    disable_gpg_check: true
 
 ### RELOAD DAEMONS ###
-- name: reload daemons
-  systemd:
-    daemon_reload: yes
+- name: Reload daemons
+  ansible.builtin.systemd:
+    daemon_reload: true

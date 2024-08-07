@@ -1,5 +1,6 @@
 ---
-- hosts: http
-  become: yes
+- name: Install grafana
+  hosts: http
+  become: true
   roles:
     - grafana
